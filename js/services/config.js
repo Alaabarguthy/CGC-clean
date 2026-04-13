@@ -2,7 +2,7 @@
  * ARTELCO App Environment Configuration
  */
 
-const WEB_BACKEND_URL = 'https://artelco-app.vercel.app';
+const WEB_BACKEND_URL = '';
 const ERP_DIRECT_URL = 'https://cgc-sa.odoo.com/jsonrpc';
 const GEMINI_API_KEY = 'AIzaSyDLT0mmUu7FZkrZqWG9z2KiOVF3q09gR_E';
 const GEMINI_MODEL = 'gemini-2.0-flash';
