@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ARTELCO Workspace</title>
+
+    <!-- Google Fonts: Inter for Clean Corporate Look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+    <!-- Main Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#002B5C">
+</head>
+
+<body>
+    <div id="app-root">
+        <!-- New Global Navbar -->
+        <header id="global-header" class="main-navbar">
+            <div class="navbar-left">
+                <span id="header-user-welcome" class="user-greeting">Welcome, User</span>
+            </div>
+            <div class="navbar-right" style="display:flex; align-items:center; gap:12px;">
+                <span id="header-date-time" class="live-clock">--:-- --</span>
+                <button id="header-logout"
+                    style="background:none; border:none; color:var(--text-tertiary); display:none; align-items:center; justify-content:center; cursor:pointer; padding:12px; margin-right:-8px;">
+                    <span class="material-icons-round" style="font-size:24px;">logout</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Viewport -->
+        <main id="view-container" class="view-container">
+            <!-- Views will be injected here by JS -->
+        </main>
+
+        <!-- Bottom Navigation Dock -->
+        <nav class="bottom-dock">
+            <div class="dock-content">
+                <button id="nav-home" class="nav-item active" data-view="home"
+                    onclick="window.app.router.navigate('home')">
+                    <span class="icon material-icons-round">grid_view</span>
+                    <span class="label">Home</span>
+                </button>
+
+                <button id="nav-tickets" class="nav-item" data-view="tickets"
+                    onclick="window.app.router.navigate('tickets')">
+                    <span class="icon material-icons-round">confirmation_number</span>
+                    <span class="label">Requests</span>
+                </button>
+
+                <!-- Central AI Action Button -->
+                <div class="fab-wrapper">
+                    <button class="ai-fab" onclick="window.app.router.navigate('ai-chat')">
+                        <div class="ai-glow"></div>
+                        <span class="icon material-icons-round">smart_toy</span>
+                    </button>
+                </div>
+
+                <button id="nav-inventory" class="nav-item" data-view="inventory"
+                    onclick="window.app.router.navigate('inventory')">
+                    <span class="icon material-icons-round">inventory</span>
+                    <span class="label">Stock</span>
+                </button>
+
+                <button id="nav-customers" class="nav-item" data-view="customers"
+                    onclick="window.app.router.navigate('customers')">
+                    <span class="icon material-icons-round">people_alt</span>
+                    <span class="label">Clients</span>
+                </button>
+
+                <button id="nav-menu" class="nav-item" data-view="menu" onclick="window.app.router.navigate('menu')">
+                    <span class="icon material-icons-round">menu</span>
+                    <span class="label">Menu</span>
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Application Logic -->
+    <script type="module" src="js/app.js"></script>
+</body>
+
+</html>

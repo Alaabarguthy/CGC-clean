@@ -1,0 +1,725 @@
+:root {
+    /* Brand Colors */
+    --primary-color: #002B5C;
+    /* Deep Navy */
+    --primary-light: #004085;
+    --accent-color: #00A4E0;
+    /* Cyan */
+    --accent-glow: rgba(0, 164, 224, 0.3);
+
+    /* Semantic Colors */
+    --success: #10B981;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+    --info: #3B82F6;
+
+    /* Neutral Colors */
+    --bg-body: #F4F6F9;
+    /* Light Gray-Blue background */
+    --bg-surface: #FFFFFF;
+    --text-primary: #111827;
+    --text-secondary: #6B7280;
+    --text-tertiary: #9CA3AF;
+    --border-light: #E5E7EB;
+
+    /* Spacing & Layout */
+    --nav-height: 70px;
+    --safe-area-top: env(safe-area-inset-top, 0px);
+    --safe-area-bottom: env(safe-area-inset-bottom, 30px);
+    --header-height: 56px;
+    --app-header-height: calc(var(--header-height) + var(--safe-area-top));
+    --app-max-width: 600px;
+
+    /* Effects */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-float: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Global Navbar Styling (Mobile Optimized) */
+.main-navbar {
+    height: var(--app-header-height);
+    background: white;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--safe-area-top) 20px 0;
+    /* Padding top for notches */
+    z-index: 2000;
+    position: sticky;
+    top: 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+.user-greeting {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.live-clock {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-primary);
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+    /* Prevent body scroll, handled by views */
+}
+
+/* App Container */
+#app-root {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    width: 100%;
+    max-width: var(--app-max-width);
+    /* Constrain on desktop to look like mobile */
+    margin: 0 auto;
+    background: var(--bg-body);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    touch-action: none;
+    /* Block base scroll to favor inner views */
+}
+
+/* Background Pattern */
+/* CGC watermark: 40% opacity on all screens except login */
+#app-root::before {
+    content: "";
+    position: absolute;
+    top: 67%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 76%;
+    height: 46%;
+    background-image: url('../assets/cgc-watermark.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    opacity: 0.4;
+    filter: saturate(1.2) brightness(1.32) contrast(1.08);
+    pointer-events: none;
+    z-index: 4000;
+    mix-blend-mode: normal;
+}
+
+/* Login screen: stronger watermark visibility */
+#app-root:has(.view-login)::before {
+    opacity: 0.75;
+}
+
+.view-container {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: calc(var(--nav-height) + var(--safe-area-bottom) + 32px);
+    position: relative;
+    scrollbar-width: none;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    touch-action: pan-y !important;
+}
+
+.view-container::-webkit-scrollbar {
+    display: none;
+    /* Hide scrollbar Chrome */
+}
+
+/* Bottom Navigation Dock */
+.bottom-dock {
+    position: fixed;
+    /* Changed from absolute for better stability */
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: var(--app-max-width);
+    height: calc(var(--nav-height) + var(--safe-area-bottom));
+    background: rgba(255, 255, 255, 0.95);
+    /* Slightly more opaque */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-top: 1px solid rgba(0, 0, 0, 0.03);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.04);
+    z-index: 3000;
+}
+
+.dock-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: var(--nav-height);
+    padding-bottom: 6px;
+}
+
+.nav-item {
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 60px;
+}
+
+.nav-item .icon {
+    font-size: 24px;
+    margin-bottom: 4px;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.nav-item .label {
+    font-size: 10px;
+    font-weight: 500;
+    opacity: 0.7;
+}
+
+.nav-item.active {
+    color: var(--primary-color);
+}
+
+.nav-item.active .icon {
+    transform: translateY(-2px);
+}
+
+.nav-item.active .label {
+    opacity: 1;
+    font-weight: 600;
+}
+
+/* Semantic Status Badge Styles */
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.open {
+    background: #E0F2FE;
+    color: #0369A1;
+}
+
+.status-badge.pending {
+    background: #FEF3C7;
+    color: #B45309;
+}
+
+.status-badge.critical {
+    background: #FEE2E2;
+    color: #B91C1C;
+}
+
+.status-badge.resolved {
+    background: #D1FAE5;
+    color: #047857;
+}
+
+/* AI FAB */
+.fab-wrapper {
+    position: relative;
+    top: -25px;
+    /* Float above */
+    height: 64px;
+    width: 64px;
+}
+
+.ai-fab {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    border: 4px solid var(--bg-surface);
+    /* Border matches bg to cut out nav */
+    box-shadow: var(--shadow-float), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    /* Subtle ring */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ai-fab:active {
+    transform: scale(0.95);
+}
+
+.ai-fab .icon {
+    font-size: 32px;
+    z-index: 2;
+}
+
+.ai-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    box-shadow: 0 0 20px var(--accent-glow);
+    animation: pulse-glow 3s infinite;
+}
+
+@keyframes pulse-glow {
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+}
+
+/* Common UI Elements */
+.card {
+    background: var(--bg-surface);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 16px;
+    border: 1px solid var(--border-light);
+}
+
+.header-lg {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-color);
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+}
+
+.header-md {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.text-sm {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.text-xs {
+    font-size: 11px;
+    color: var(--text-tertiary);
+}
+
+/* Loader Spinner Component */
+.loader-spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-top: 3px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin-loader 1s linear infinite;
+}
+
+@keyframes spin-loader {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Filter Chips */
+.filter-chip {
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: #F3F4F6;
+    border: 1px solid transparent;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-chip.active {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 56, 117, 0.2);
+}
+
+/* Modal Animations */
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-up {
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes bounce {
+
+    0%,
+    80%,
+    100% {
+        transform: scale(0);
+    }
+
+    40% {
+        transform: scale(1.0);
+    }
+}
+
+.ai-bubble {
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03) !important;
+    max-width: 90%;
+    word-wrap: break-word;
+}
+
+.ai-bubble>* {
+    max-width: 100%;
+}
+
+#chat-textarea::-webkit-scrollbar {
+    display: none;
+}
+
+/* Rich Table Enhancements */
+.rich-table-container {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 12px 0;
+    border: 1px solid #E2E8F0;
+}
+
+.rich-table {
+    min-width: 600px;
+    /* Force overflow for horizontal scrolling */
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    background: white;
+}
+
+.rich-table th {
+    background: #F8FAFC;
+    color: #64748B;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 2px solid #F1F5F9;
+}
+
+.rich-table td {
+    padding: 12px 16px;
+    color: var(--text-primary);
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.rich-table tr:last-child td {
+    border-bottom: none;
+}
+
+.rich-table tr:hover {
+    background: #F1F5F9;
+}
+
+/* Notification System Styles */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 90%;
+    max-width: 400px;
+    pointer-events: none;
+}
+
+.toast {
+    background: rgba(17, 24, 39, 0.95);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 16px 20px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+    pointer-events: all;
+    animation: toast-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.toast.toast-success {
+    border-left: 4px solid var(--success);
+}
+
+.toast.toast-error {
+    border-left: 4px solid var(--danger);
+}
+
+.toast.toast-warning {
+    border-left: 4px solid var(--warning);
+}
+
+.toast-icon {
+    font-size: 20px;
+}
+
+.toast-message {
+    font-size: 14px;
+    font-weight: 500;
+    flex: 1;
+}
+
+.toast-exit {
+    animation: toast-exit 0.3s forwards;
+}
+
+/* Modern App Alert Styles */
+.app-alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.app-alert-sheet {
+    background: white;
+    width: 100%;
+    max-width: 320px;
+    border-radius: 28px;
+    padding: 32px 24px 24px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    animation: alert-enter 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.app-alert-icon {
+    width: 64px;
+    height: 64px;
+    background: #F3F4F6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.app-alert-icon span {
+    font-size: 32px;
+}
+
+.app-alert-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.app-alert-msg {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+.app-alert-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    background: var(--primary-color);
+    color: white;
+    cursor: pointer;
+}
+
+@keyframes toast-enter {
+    from {
+        transform: translateY(-30px);
+        opacity: 0;
+        scale: 0.9;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+        scale: 1;
+    }
+}
+
+@keyframes toast-exit {
+    to {
+        transform: translateY(-20px);
+        opacity: 0;
+        scale: 0.95;
+    }
+}
+
+@keyframes alert-enter {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Global Mobile Resilience: Sheet Layout */
+.details-sheet {
+    background: white;
+    width: 100%;
+    border-radius: 28px 28px 0 0;
+    padding: 32px 24px calc(24px + var(--safe-area-bottom));
+    max-height: 94vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.15);
+    position: relative;
+    overflow-y: auto;
+}
+
+/* Status Indicators */
+.status-dot-pulse {
+    width: 10px;
+    height: 10px;
+    background: #0088CC;
+    border-radius: 50%;
+    position: relative;
+    display: inline-block;
+}
+
+.status-dot-pulse::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 50%;
+    border: 1px solid #0088CC;
+    animation: status-pulse 1.5s infinite ease-out;
+}
+
+@keyframes status-pulse {
+    0% {
+        transform: scale(0.6);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.8);
+        opacity: 0;
+    }
+}
+
+/* Responsive Adjustments for Ultra-Small Phones (e.g. iPhone SE) */
+@media screen and (max-width: 360px) {
+    .header-lg {
+        font-size: 24px;
+    }
+
+    .header-md {
+        font-size: 16px;
+    }
+
+    .card {
+        padding: 16px;
+    }
+
+    .nav-item {
+        width: 55px;
+    }
+
+    .nav-item .icon {
+        font-size: 22px;
+    }
+
+    .nav-item .label {
+        font-size: 9px;
+    }
+
+    .view-container {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+}
+
+/* Fix for landscape or very short screens */
+@media screen and (max-height: 600px) {
+    .ai-fab {
+        width: 56px;
+        height: 56px;
+    }
+
+    .fab-wrapper {
+        top: -20px;
+        height: 56px;
+        width: 56px;
+    }
+
+    .ai-fab .icon {
+        font-size: 28px;
+    }
+}
