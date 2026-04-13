@@ -59,9 +59,9 @@ export async function _executeRequest(payload) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
-        console.log("response:", response);
-        const data = await response.json();
 
+        const data = await response.json();
+console.log("ERP data:", data);
         // Critical Check: Force logout if ERP credentials are changed/revoked
         // We check for "Email ... Not Found" or "Password Incorect"
         const check = Array.isArray(data) ? data[0] : data;
