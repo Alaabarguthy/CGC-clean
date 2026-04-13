@@ -441,7 +441,11 @@ export const AuthService = {
             "login_user": ERP_CONFIG.auth,
             "tablename": "AD_User",
             "type": "query_data",
-            "columns_where": [{ "name": "Name", "opertor": "LIKE", "value": `%${query}%` }],
+          
+"columns_where": [
+  { "name": "name", "opertor": "ilike", "value": query }
+],
+
             "columns_output": ["AD_User_ID", "Name", "EMail", "IsActive"]
         };
         const data = await _executeRequest(payload);
@@ -800,7 +804,7 @@ export const TicketService = {
 
     async getSalesOrders(partnerId = null, salesRepId = null) {
         const columns_where = [
-            { "name": "DocumentNo", "opertor": "LIKE", "value": "SO%" }
+      { "name": "DocumentNo", "opertor": "ilike", "value": "SO%" }
         ];
 
         if (partnerId) {
@@ -1259,7 +1263,11 @@ export const CustomerService = {
             "login_user": ERP_CONFIG.auth,
             "tablename": "C_BPartner",
             "type": "query_data",
-            "columns_where": [{ "name": "Name", "opertor": "LIKE", "value": `%${lowerQuery}%` }],
+            
+"columns_where": [
+  { "name": "name", "opertor": "ilike", "value": lowerQuery }
+]
+,
             "columns_output": ["C_BPartner_ID", "Name", "Name2", "TotalOpenBalance", "IsActive", "SalesRep_ID", "Rating", "Value"]
         };
         const data = await _executeRequest(payload);
